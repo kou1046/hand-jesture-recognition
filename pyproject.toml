@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "hand-sign-recognition"
+version = "0.1.0"
+description = ""
+authors = ["kou1046<iwashiro0517@yahoo.co.jp>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+opencv-python = "^4.8.0.74"
+mediapipe = "^0.10.2"
+black = "^23.7.0"
+torch = "^2.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
