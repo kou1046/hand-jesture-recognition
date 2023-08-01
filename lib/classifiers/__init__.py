@@ -1,0 +1,1 @@
+from .hand_sign_classifier import HandSignClassifier

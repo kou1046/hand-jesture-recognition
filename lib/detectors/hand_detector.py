@@ -1,7 +1,8 @@
+from __future__ import annotations
 import mediapipe as mp
 import numpy as np
 
-from .handpoints import HandPoints, Point
+from ..types.handpoints import HandPoints, Point
 
 
 class HandDetector:

@@ -1,3 +1,5 @@
-from .hand_detector import HandDetector
-from .hand_sign_logger import HandSignDataLoggerGUI, LabeledHandPointsStore, LabeledHandPoints
-from .handpoints import HandPoints, NdJsonLabeledHandPointsStore
+from .detectors import HandDetector
+from .loggers import HandSignDataLoggerGUI
+from .stores import NdJsonLabeledHandPointsStore, LabeledHandPointsStore
+from .types import HandPoints, LabeledHandPoints
+from .classifiers import HandSignClassifier

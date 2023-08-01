@@ -1,12 +1,12 @@
 from __future__ import annotations
 from enum import Enum
-import os
 
 import cv2
 import numpy as np
 
-from .hand_detector import HandDetector
-from .handpoints import LabeledHandPointsStore, LabeledHandPoints, NdJsonLabeledHandPointsStore
+from ..detectors.hand_detector import HandDetector
+from ..types import LabeledHandPoints
+from ..stores import LabeledHandPointsStore
 
 
 class Mode(Enum):
@@ -15,12 +15,7 @@ class Mode(Enum):
 
 
 class HandSignDataLoggerGUI:
-    def __init__(
-        self,
-        store: LabeledHandPointsStore = NdJsonLabeledHandPointsStore(
-            os.path.join("models", "labeled_handpoints.ndjson")
-        ),
-    ):
+    def __init__(self, store: LabeledHandPointsStore):
         self.store = store
         self.mode: Mode = Mode.DISPLAY
         self.label: int | None = None
