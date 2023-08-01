@@ -1,19 +1,10 @@
 from __future__ import annotations
-import os
 
 import numpy as np
-from mediapipe.framework.formats.landmark_pb2 import NormalizedLandmark
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 class Point:
     def __init__(self, x: float | int, y: float | int):
-        if x > int(os.environ["VIDEO_WIDTH"]):
-            x = int(os.environ["VIDEO_WIDTH"])
-        if y > int(os.environ["VIDEO_HEIGHT"]):
-            y = int(os.environ["VIDEO_HEIGHT"])
 
         if x is None:
             x = 0.0
@@ -28,14 +19,8 @@ class Point:
 
 
 class HandPoints:
-    def __init__(self, landmarks: list[NormalizedLandmark | Point]):
-        if isinstance(landmarks[0], NormalizedLandmark):
-            self.landmarks = [
-                Point(landmark.x * int(os.environ["VIDEO_WIDTH"]), landmark.y * int(os.environ["VIDEO_HEIGHT"]))
-                for landmark in landmarks
-            ]
-        else:
-            self.landmarks = landmarks
+    def __init__(self, landmarks: list[Point]):
+        self.landmarks = landmarks
 
     def _to_relative(self):
         return HandPoints([Point(point.x - self.wrist.x, point.y - self.wrist.y) for point in self.landmarks])

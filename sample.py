@@ -1,28 +1,23 @@
 import os
 
 import cv2
-import mediapipe as mp
 import numpy as np
 
 from handpoints import HandPoints
-from dotenv import load_dotenv
-
-load_dotenv()
+from hand_detector import HandDetector
 
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, int(os.environ["VIDEO_WIDTH"]))
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, int(os.environ["VIDEO_HEIGHT"]))
 
-mp_hands = mp.solutions.hands
-hands = mp_hands.Hands()
+detector = HandDetector()
+
 
 while True:
     _, img = cap.read()
-    result = hands.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    handpoints = detector.detect(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
-    if result.multi_hand_landmarks:
-        handpoints = HandPoints(result.multi_hand_landmarks[0].landmark)
-
+    if handpoints is not None:
         print(handpoints._to_relative()._normalize().to_numpy())
 
     cv2.imshow("Image", img)
