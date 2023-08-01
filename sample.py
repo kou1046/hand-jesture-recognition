@@ -1,20 +1,12 @@
 import os
-from dataclasses import asdict
-
-import ndjson
-import dacite
 import cv2
 
-from classifier import HandSignClassifier
-from lib import LabeledHandPointsStore
-from lib.handpoints import LabeledHandPoints
-from lib import HandDetector
-
+from lib import HandDetector, HandSignClassifier
 
 if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
     detector = HandDetector()
-    classifier = HandSignClassifier(pretrained_model_path=os.path.join("models", "hand_sign_classifier.pth"))
+    classifier = HandSignClassifier(2, pretrained_model_path=os.path.join("models", "hand_sign_classifier_weights.pth"))
 
     while True:
         ret, frame = cap.read()
