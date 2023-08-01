@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
-
+import cv2
 
 class Point:
     def __init__(self, x: float | int, y: float | int):
@@ -13,10 +13,12 @@ class Point:
 
         self.x = x
         self.y = y
-
+        
     def to_tuple(self):
         return self.x, self.y
 
+    def to_inttuple(self):
+        return int(self.x), int(self.y)
 
 class HandPoints:
     def __init__(self, landmarks: list[Point]):
@@ -33,6 +35,103 @@ class HandPoints:
 
     def to_numpy(self):
         return np.array([point.to_tuple() for point in self.landmarks])
+    
+    def draw(self, image: np.ndarray):
+        
+        # thumb 
+        cv2.line(image, self.thumb_2.to_inttuple(), self.thumb_3.to_inttuple(),(0, 0, 0), 6)
+        cv2.line(image, self.thumb_2.to_inttuple(), self.thumb_3.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.thumb_3.to_inttuple(), self.thumb_4.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.thumb_3.to_inttuple(), self.thumb_4.to_inttuple(),
+                (255, 255, 255), 2)
+        
+        # index_finger 
+        cv2.line(image, self.index_finger1.to_inttuple(), self.index_finger2.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.index_finger1.to_inttuple(), self.index_finger2.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.index_finger2.to_inttuple(), self.index_finger3.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.index_finger2.to_inttuple(), self.index_finger3.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.index_finger3.to_inttuple(), self.index_finger4.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.index_finger3.to_inttuple(), self.index_finger4.to_inttuple(),
+                (255, 255, 255), 2)
+        
+        # middle finter
+        cv2.line(image, self.middle_finger1.to_inttuple(), self.middle_finger2.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.middle_finger1.to_inttuple(), self.middle_finger2.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.middle_finger2.to_inttuple(), self.middle_finger3.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.middle_finger2.to_inttuple(), self.middle_finger3.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.middle_finger3.to_inttuple(), self.middle_finger4.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.middle_finger3.to_inttuple(), self.middle_finger4.to_inttuple(),
+                (255, 255, 255), 2)
+
+        # ring finger
+        cv2.line(image, self.ring_finger1.to_inttuple(), self.ring_finger2.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.ring_finger1.to_inttuple(), self.ring_finger2.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.ring_finger2.to_inttuple(), self.ring_finger3.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.ring_finger2.to_inttuple(), self.ring_finger3.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.ring_finger3.to_inttuple(), self.ring_finger4.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.ring_finger3.to_inttuple(), self.ring_finger4.to_inttuple(),
+                (255, 255, 255), 2)
+
+        # # pinkey_finter
+        cv2.line(image, self.pinkey_finger1.to_inttuple(), self.pinkey_finger2.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.pinkey_finger1.to_inttuple(), self.pinkey_finger2.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.pinkey_finger2.to_inttuple(), self.pinkey_finger3.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.pinkey_finger2.to_inttuple(), self.pinkey_finger3.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.pinkey_finger3.to_inttuple(), self.pinkey_finger4.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.pinkey_finger3.to_inttuple(), self.pinkey_finger4.to_inttuple(),
+                (255, 255, 255), 2)
+
+        # palm
+        cv2.line(image, self.wrist.to_inttuple(), self.thumb_1.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.wrist.to_inttuple(), self.thumb_1.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.thumb_1.to_inttuple(), self.thumb_2.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.thumb_1.to_inttuple(), self.thumb_2.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.thumb_2.to_inttuple(), self.index_finger1.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.thumb_2.to_inttuple(), self.index_finger1.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.index_finger1.to_inttuple(), self.middle_finger1.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.index_finger1.to_inttuple(), self.middle_finger1.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.middle_finger1.to_inttuple(), self.ring_finger1.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.middle_finger1.to_inttuple(), self.ring_finger1.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.ring_finger1.to_inttuple(), self.pinkey_finger1.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.ring_finger1.to_inttuple(), self.pinkey_finger1.to_inttuple(),
+                (255, 255, 255), 2)
+        cv2.line(image, self.pinkey_finger1.to_inttuple(), self.wrist.to_inttuple(),
+                (0, 0, 0), 6)
+        cv2.line(image, self.pinkey_finger1.to_inttuple(), self.wrist.to_inttuple(),
+                (255, 255, 255), 2)
 
     @property
     def wrist(self):
