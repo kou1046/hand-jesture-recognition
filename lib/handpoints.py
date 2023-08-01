@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 import numpy as np
 import cv2
 
@@ -216,3 +217,12 @@ class HandPoints:
     @property
     def pinkey_finger4(self):
         return self.landmarks[20]
+
+@dataclass(frozen=True)
+class LabeledHandPoints:
+    label: int
+    handpoints: HandPoints
+    
+class LabeledHandPointsStore:
+    def save(self, dataset: list[LabeledHandPoints]) -> None : ...
+    def load(self) -> list[LabeledHandPoints]: ...

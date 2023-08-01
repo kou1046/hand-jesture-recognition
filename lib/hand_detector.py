@@ -1,9 +1,8 @@
 
 import mediapipe as mp
 import numpy as np 
-import cv2
 
-from handpoints import HandPoints, Point
+from .handpoints import HandPoints, Point
 
 class HandDetector:
     def __init__(self, **kwargs):
