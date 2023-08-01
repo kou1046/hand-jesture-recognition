@@ -1,19 +1,22 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+
 import numpy as np
 import cv2
+from dacite import from_dict
+import ndjson
 
+@dataclass(frozen=True)
 class Point:
-    def __init__(self, x: float | int, y: float | int):
-
-        if x is None:
-            x = 0.0
-        if y is None:
-            y = 0.0
-
-        self.x = x
-        self.y = y
+    x: float
+    y: float
+    
+    def __post_init__(self):
+        if self.x is None:
+            object.__setattr__("x", 0.0)
+        if self.y is None:
+            object.__setattr__("y", 0.0)
         
     def to_tuple(self):
         return self.x, self.y
@@ -21,21 +24,23 @@ class Point:
     def to_inttuple(self):
         return int(self.x), int(self.y)
 
+
+@dataclass(frozen=True)
 class HandPoints:
-    def __init__(self, landmarks: list[Point]):
-        self.landmarks = landmarks
+    
+    values: list[Point]
 
     def _to_relative(self):
-        return HandPoints([Point(point.x - self.wrist.x, point.y - self.wrist.y) for point in self.landmarks])
+        return HandPoints([Point(point.x - self.wrist.x, point.y - self.wrist.y) for point in self.values])
 
     def _normalize(self):
-        max_point_x = max([abs(point.x) for point in self.landmarks])
-        max_point_y = max([abs(point.y) for point in self.landmarks])
+        max_point_x = max([abs(point.x) for point in self.values])
+        max_point_y = max([abs(point.y) for point in self.values])
 
-        return HandPoints([Point(point.x / max_point_x, point.y / max_point_y) for point in self.landmarks])
+        return HandPoints([Point(point.x / max_point_x, point.y / max_point_y) for point in self.values])
 
     def to_numpy(self):
-        return np.array([point.to_tuple() for point in self.landmarks])
+        return np.array([point.to_tuple() for point in self.values])
     
     def draw(self, image: np.ndarray):
         
@@ -136,87 +141,87 @@ class HandPoints:
 
     @property
     def wrist(self):
-        return self.landmarks[0]
+        return self.values[0]
 
     @property
     def thumb_1(self):
-        return self.landmarks[1]
+        return self.values[1]
 
     @property
     def thumb_2(self):
-        return self.landmarks[2]
+        return self.values[2]
 
     @property
     def thumb_3(self):
-        return self.landmarks[3]
+        return self.values[3]
 
     @property
     def thumb_4(self):
-        return self.landmarks[4]
+        return self.values[4]
 
     @property
     def index_finger1(self):
-        return self.landmarks[5]
+        return self.values[5]
 
     @property
     def index_finger2(self):
-        return self.landmarks[6]
+        return self.values[6]
 
     @property
     def index_finger3(self):
-        return self.landmarks[7]
+        return self.values[7]
 
     @property
     def index_finger4(self):
-        return self.landmarks[8]
+        return self.values[8]
 
     @property
     def middle_finger1(self):
-        return self.landmarks[9]
+        return self.values[9]
 
     @property
     def middle_finger2(self):
-        return self.landmarks[10]
+        return self.values[10]
 
     @property
     def middle_finger3(self):
-        return self.landmarks[11]
+        return self.values[11]
 
     @property
     def middle_finger4(self):
-        return self.landmarks[12]
+        return self.values[12]
 
     @property
     def ring_finger1(self):
-        return self.landmarks[13]
+        return self.values[13]
 
     @property
     def ring_finger2(self):
-        return self.landmarks[14]
+        return self.values[14]
 
     @property
     def ring_finger3(self):
-        return self.landmarks[15]
+        return self.values[15]
 
     @property
     def ring_finger4(self):
-        return self.landmarks[16]
+        return self.values[16]
 
     @property
     def pinkey_finger1(self):
-        return self.landmarks[17]
+        return self.values[17]
 
     @property
     def pinkey_finger2(self):
-        return self.landmarks[18]
+        return self.values[18]
 
     @property
     def pinkey_finger3(self):
-        return self.landmarks[19]
+        return self.values[19]
 
     @property
     def pinkey_finger4(self):
-        return self.landmarks[20]
+        return self.values[20]
 
 @dataclass(frozen=True)
 class LabeledHandPoints:
@@ -224,5 +229,18 @@ class LabeledHandPoints:
     handpoints: HandPoints
     
 class LabeledHandPointsStore:
-    def save(self, dataset: list[LabeledHandPoints]) -> None : ...
+    def save(self, labeled_handpoints: LabeledHandPoints) -> None : ...
     def load(self) -> list[LabeledHandPoints]: ...
+    
+class NdJsonLabeledHandPointsStore(LabeledHandPointsStore):
+    def __init__(self, file_path: str):
+        self.file_path = file_path
+    def save(self, labeled_handpoints: LabeledHandPoints) -> None:
+        with open(self.file_path, "a") as f:
+            writer = ndjson.writer(f)
+            writer.writerow(asdict(labeled_handpoints))
+    def load(self) -> list[LabeledHandPoints]:
+        with open(self.file_path, "r") as f:
+            dataset: list[dict] = ndjson.load(f)
+            dataset = [from_dict(LabeledHandPoints, data) for data in dataset]
+        return dataset
