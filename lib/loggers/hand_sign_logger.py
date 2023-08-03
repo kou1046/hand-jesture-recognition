@@ -15,6 +15,12 @@ class Mode(Enum):
 
 
 class HandSignDataLoggerGUI:
+    """
+    startで起動すると学習に必要な座標データを記録することが出来る.
+    0 - 9 キーを押すと指定したキーの数字ラベルで座標を記録する. dキーを押すとディスプレイモード（記録しない）.
+    登録したラベルに飛び番号(0,1,3で登録など)があると学習時にエラーを起こすので注意．
+    """
+
     def __init__(self, store: LabeledHandPointsStore):
         self.store = store
         self.mode: Mode = Mode.DISPLAY

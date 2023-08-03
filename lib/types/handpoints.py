@@ -12,6 +12,9 @@ class Point:
     y: float
 
     def __post_init__(self):
+        """
+        Noneが渡されたときは0.0に変換
+        """
         if self.x is None:
             object.__setattr__("x", 0.0)
         if self.y is None:
@@ -29,9 +32,15 @@ class HandPoints:
     values: list[Point]
 
     def _to_relative(self):
+        """
+        wristを始点とした相対座標に変換
+        """
         return HandPoints([Point(point.x - self.wrist.x, point.y - self.wrist.y) for point in self.values])
 
     def _normalize(self):
+        """
+        x, yそれぞれ一番大きかった絶対値で割る（正規化）
+        """
         max_point_x = max([abs(point.x) for point in self.values])
         max_point_y = max([abs(point.y) for point in self.values])
 
@@ -41,6 +50,9 @@ class HandPoints:
         return [point.to_tuple() for point in self.values]
 
     def preprocess(self):
+        """
+        学習の前処理 相対座標 -> 正規化 -> リスト化
+        """
         return self._to_relative()._normalize().to_list()
 
     def draw(self, image: np.ndarray):
@@ -181,5 +193,3 @@ class HandPoints:
     @property
     def pinkey_finger4(self):
         return self.values[20]
-
-        ...

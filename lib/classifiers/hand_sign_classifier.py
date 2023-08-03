@@ -36,6 +36,9 @@ class HandSignClassifier(nn.Module):
         return y
 
     def predict(self, handpoints: HandPoints):
+        """
+        実際の運用時はこっちを用いるとよい. HandPointsを渡すと予測ラベルを返す.
+        """
         x = torch.Tensor([handpoints.preprocess()])
 
         return int(torch.argmax(self(x), dim=1)[0])
