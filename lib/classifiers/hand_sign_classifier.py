@@ -43,12 +43,3 @@ class HandSignClassifier(nn.Module):
         x = torch.Tensor([handpoints._to_relative()._normalize().to_numpy()])
 
         return int(torch.argmax(self(x), dim=1)[0])
-
-
-def collate_fn(batch: list[tuple[np.ndarray, int]]):
-    batch_points = []
-    batch_labels = []
-    for points, label in batch:
-        batch_points.append(torch.Tensor(points))
-        batch_labels.append(label)
-    return torch.stack(batch_points), torch.Tensor(batch_labels).long()

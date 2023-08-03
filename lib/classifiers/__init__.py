@@ -1,1 +1,2 @@
 from .hand_sign_classifier import HandSignClassifier
+from .hand_sign_classifier_trainer import HandSignTrainer
