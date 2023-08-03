@@ -3,7 +3,6 @@ from __future__ import annotations
 import torch
 from torch import nn, optim
 from torch.utils import data
-import numpy as np
 
 from sklearn.model_selection import train_test_split
 
@@ -86,10 +85,10 @@ class HandSignDataset(data.Dataset):
     def __getitem__(self, index: int):
         data = self.dataset[index]
 
-        return data.handpoints._to_relative()._normalize().to_numpy(), data.label - 1
+        return data.handpoints.preprocess(), data.label
 
 
-def collate_fn(batch: list[tuple[np.ndarray, int]]):
+def collate_fn(batch: list[tuple[list, int]]):
     batch_points = []
     batch_labels = []
     for points, label in batch:

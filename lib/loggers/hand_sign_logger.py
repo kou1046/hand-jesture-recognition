@@ -27,21 +27,29 @@ class HandSignDataLoggerGUI:
         cv2.putText(img, display_text, (0, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, text_color, 1, cv2.LINE_AA)
         cv2.imshow("img", img)
         key = cv2.waitKey(1)
+
         if key == 27:  # Esc
             cv2.destroyAllWindows()
             exit()
-        if key >= ord("1") and key <= ord("9"):  # 1 ~ 9
+
+        if key >= ord("0") and key <= ord("9"):  # 0 ~ 9
             self.mode = Mode.LOG
-            self.label = int(chr(key))
+            label = int(chr(key))
+            self._change_label(label)
+
         if key == ord("d"):  # d
             self.mode = Mode.DISPLAY
+            self._change_label(None)
+
+    def _change_label(self, label: int | None):
+        self.label = label
 
     def start(self):
         detector = HandDetector()
         cap = cv2.VideoCapture(0)
 
         while True:
-            ret, img = cap.read(0)
+            ret, img = cap.read()
             handpoints = detector.detect(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
             if handpoints is None:

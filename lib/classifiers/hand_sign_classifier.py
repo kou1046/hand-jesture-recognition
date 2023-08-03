@@ -1,11 +1,7 @@
 from __future__ import annotations
-import os
 
 import torch
-from torch import nn, optim
-from torch.utils import data
-import numpy as np
-from sklearn.model_selection import train_test_split
+from torch import nn
 
 from ..types import HandPoints
 
@@ -33,13 +29,13 @@ class HandSignClassifier(nn.Module):
             )
             self.eval()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor):
         y = self.block(x)
         y = y.view(x.shape[0], -1)
         y = self.block2(y)
         return y
 
     def predict(self, handpoints: HandPoints):
-        x = torch.Tensor([handpoints._to_relative()._normalize().to_numpy()])
+        x = torch.Tensor([handpoints.preprocess()])
 
         return int(torch.argmax(self(x), dim=1)[0])

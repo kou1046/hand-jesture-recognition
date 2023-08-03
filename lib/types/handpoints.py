@@ -37,8 +37,11 @@ class HandPoints:
 
         return HandPoints([Point(point.x / max_point_x, point.y / max_point_y) for point in self.values])
 
-    def to_numpy(self):
-        return np.array([point.to_tuple() for point in self.values])
+    def to_list(self):
+        return [point.to_tuple() for point in self.values]
+
+    def preprocess(self):
+        return self._to_relative()._normalize().to_list()
 
     def draw(self, image: np.ndarray):
         # thumb
