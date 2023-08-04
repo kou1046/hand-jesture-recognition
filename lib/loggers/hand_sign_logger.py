@@ -12,6 +12,7 @@ from ..stores import LabeledHandPointsStore
 class Mode(Enum):
     DISPLAY = 0
     LOG = 1
+    FINISH = -1
 
 
 class HandSignDataLoggerGUI:
@@ -36,25 +37,31 @@ class HandSignDataLoggerGUI:
 
         if key == 27:  # Esc
             cv2.destroyAllWindows()
-            exit()
+            self._change_mode(Mode.FINISH)
 
         if key >= ord("0") and key <= ord("9"):  # 0 ~ 9
-            self.mode = Mode.LOG
+            self._change_mode(Mode.LOG)
             label = int(chr(key))
             self._change_label(label)
 
         if key == ord("d"):  # d
-            self.mode = Mode.DISPLAY
+            self._change_mode(Mode.DISPLAY)
             self._change_label(None)
 
     def _change_label(self, label: int | None):
         self.label = label
+
+    def _change_mode(self, mode: Mode):
+        self.mode = mode
 
     def start(self):
         detector = HandDetector()
         cap = cv2.VideoCapture(0)
 
         while True:
+            if self.mode == Mode.FINISH:
+                break
+
             ret, img = cap.read()
             handpoints = detector.detect(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
@@ -64,6 +71,6 @@ class HandSignDataLoggerGUI:
 
             handpoints.draw(img)
             if self.mode == Mode.LOG:
-                self.store.save(LabeledHandPoints(self.label, handpoints))
+                self.store.add(LabeledHandPoints(self.label, handpoints))
 
             self._display(img)

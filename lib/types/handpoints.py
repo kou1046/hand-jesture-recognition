@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from typing import ClassVar
 from dataclasses import dataclass
+from functools import reduce
 
 import numpy as np
 import cv2
@@ -55,6 +57,14 @@ class HandPoints:
         """
         return self._to_relative()._normalize().to_list()
 
+    def bbox(self):
+        f = lambda attr: [int(getattr(point, attr)) for point in self.values]
+
+        min_x, max_x = min(f("x")), max(f("x"))
+        min_y, max_y = min(f("y")), max(f("y"))
+
+        return min_x, min_y, max_x, max_y
+
     def draw(self, image: np.ndarray):
         # thumb
         cv2.line(image, self.thumb_2.to_inttuple(), self.thumb_3.to_inttuple(), (0, 0, 0), 6)
@@ -64,7 +74,7 @@ class HandPoints:
 
         # index_finger
         cv2.line(image, self.index_finger1.to_inttuple(), self.index_finger2.to_inttuple(), (0, 0, 0), 6)
-        cv2.line(image, self.index_finger1.to_inttuple(), self.index_finger2.to_inttuple(), (255, 255, 255), 2)
+        cv2.line(image, self.index_finger1.to_inttuple(), self.index_finger2.to_inttuple(), (255, 255, 255))
         cv2.line(image, self.index_finger2.to_inttuple(), self.index_finger3.to_inttuple(), (0, 0, 0), 6)
         cv2.line(image, self.index_finger2.to_inttuple(), self.index_finger3.to_inttuple(), (255, 255, 255), 2)
         cv2.line(image, self.index_finger3.to_inttuple(), self.index_finger4.to_inttuple(), (0, 0, 0), 6)
