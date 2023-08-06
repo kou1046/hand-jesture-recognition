@@ -1,2 +1,2 @@
-from .handpoints import HandPoints
+from .handpoints import HandPoints, Point
 from .labeled_handpoints import LabeledHandPoints
