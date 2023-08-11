@@ -1,2 +1,3 @@
 from .labeled_handpoints_store import LabeledHandPointsStore
 from .ndjson_labeled_handpoints_store import NdJsonLabeledHandPointsStore
+from .in_memory_labeled_handponts_store import InMemoryLabeledHandpointsStore
